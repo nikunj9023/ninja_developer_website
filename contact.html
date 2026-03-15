@@ -95,46 +95,59 @@
             const btn = this.querySelector('button');
             const status = document.getElementById('statusMessage');
 
+            console.log("Form submission started");
             btn.innerHTML = 'Sending... <i class="fa-solid fa-spinner fa-spin"></i>';
             btn.disabled = true;
 
-            const templateParams = {
-                from_name: document.getElementById('from_name').value,
-                reply_to: document.getElementById('reply_to').value,
-                contact_number: document.getElementById('contact_number').value,
-                message: document.getElementById('message').value
-            };
+            try {
+                const templateParams = {
+                    from_name: document.getElementById('from_name').value,
+                    reply_to: document.getElementById('reply_to').value,
+                    contact_number: document.getElementById('contact_number').value,
+                    message: document.getElementById('message').value
+                };
+                console.log("Params collected:", templateParams);
 
-            // 1. Send to CRM Backend
-            const CRM_API_URL = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost' 
-                                ? 'http://127.0.0.1:5000' 
-                                : 'https://ninja-developer-api.onrender.com'; // YOUR PRODUCTION URL
+                // 1. Send to CRM (Non-blocking)
+                const CRM_API_URL = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost' 
+                                    ? 'http://127.0.0.1:5000' 
+                                    : 'https://ninja-developer-api.onrender.com';
+                
+                fetch(`${CRM_API_URL}/api/website-lead`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(templateParams)
+                })
+                .then(() => console.log("CRM pinged"))
+                .catch(e => console.warn("CRM Save Skipped", e));
 
-            fetch(`${CRM_API_URL}/api/website-lead`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(templateParams)
-            })
-            .then(res => res.json())
-            .catch(e => console.warn("CRM connection offline - skipping server save", e));
-
-            // 2. Send via EmailJS (Replace these with your actual keys)
-            emailjs.send('service_1q20cs9', 'template_ezrino7', templateParams)
-                .then(function () {
-                    status.style.display = 'block';
-                    status.style.color = '#10b981';
-                    status.innerHTML = '<i class="fa-solid fa-check"></i> Message sent successfully!';
-                    btn.innerHTML = 'Send Message';
-                    btn.disabled = false;
-                    document.getElementById('contactForm').reset();
-                }, function (error) {
-                    console.error('EmailJS Error:', error);
-                    status.style.display = 'block';
-                    status.style.color = '#ef4444';
-                    status.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Email failed to send. Please try again.';
-                    btn.innerHTML = 'Send Message';
-                    btn.disabled = false;
-                });
+                // 2. Send via EmailJS (The critical part)
+                console.log("Calling EmailJS...");
+                emailjs.send('service_1q20cs9', 'template_ezrino7', templateParams)
+                    .then(function (response) {
+                        console.log("EmailJS Success!", response.status, response.text);
+                        status.style.display = 'block';
+                        status.style.color = '#10b981';
+                        status.innerHTML = '<i class="fa-solid fa-check"></i> Message sent successfully!';
+                        btn.innerHTML = 'Send Message';
+                        btn.disabled = false;
+                        document.getElementById('contactForm').reset();
+                    }, function (error) {
+                        console.error('EmailJS Error:', error);
+                        status.style.display = 'block';
+                        status.style.color = '#ef4444';
+                        status.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Email failed (Error: ' + (error.text || error.message || 'Unknown') + ')';
+                        btn.innerHTML = 'Send Message';
+                        btn.disabled = false;
+                    });
+            } catch (err) {
+                console.error("Critical Form Error:", err);
+                status.style.display = 'block';
+                status.style.color = '#ef4444';
+                status.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Browser/System error. Please contact via WhatsApp.';
+                btn.innerHTML = 'Send Message';
+                btn.disabled = false;
+            }
         });
     </script>
 </body>
