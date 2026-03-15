@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function () {
+            emailjs.init('co6_90E84kdZxW-JX'); // Same Public Key as contact.html
+        })();
+    </script>
     <style>
         .hire-me-container {
             padding: 8rem 5% 5rem;
@@ -450,26 +457,30 @@
                 project_type: selectedType
             };
 
+            // Mapping for EmailJS
+            const templateParams = {
+                from_name: formData.name,
+                reply_to: formData.email,
+                message: `Project Type: ${formData.project_type}\nBudget: ${formData.budget}\nDetails: ${formData.details}`
+            };
+
+            // 1. Send to CRM (Optional)
             fetch('https://ninja-developer-api.onrender.com/api/website-lead', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
             })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
+            .catch(e => console.warn("CRM Save Skipped", e));
+
+            // 2. Send via EmailJS
+            emailjs.send('service_1q20cs9', 'template_ezrino7', templateParams)
                 .then(data => {
                     btn.style.display = 'none';
                     msg.style.display = 'block';
                     this.reset();
                 })
                 .catch(error => {
-                    console.error('Error:', error);
+                    console.error('Email Error:', error);
                     btn.innerHTML = 'Error! Try Again';
                     btn.style.opacity = '1';
                     setTimeout(() => {

@@ -113,15 +113,17 @@
             fetch(`${CRM_API_URL}/api/website-lead`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            }).catch(e => console.error("Failed to save to CRM", e));
+                body: JSON.stringify(templateParams)
+            })
+            .then(res => res.json())
+            .catch(e => console.warn("CRM connection offline - skipping server save", e));
 
             // 2. Send via EmailJS (Replace these with your actual keys)
             emailjs.send('service_1q20cs9', 'template_ezrino7', templateParams)
                 .then(function () {
                     status.style.display = 'block';
                     status.style.color = '#10b981';
-                    status.innerHTML = '<i class="fa-solid fa-check"></i> Message sent & saved successfully!';
+                    status.innerHTML = '<i class="fa-solid fa-check"></i> Message sent successfully!';
                     btn.innerHTML = 'Send Message';
                     btn.disabled = false;
                     document.getElementById('contactForm').reset();
@@ -129,10 +131,9 @@
                     console.error('EmailJS Error:', error);
                     status.style.display = 'block';
                     status.style.color = '#ef4444';
-                    status.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> CRM updated, but email failed. Check console.';
+                    status.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Email failed to send. Please try again.';
                     btn.innerHTML = 'Send Message';
                     btn.disabled = false;
-                    document.getElementById('contactForm').reset();
                 });
         });
     </script>
