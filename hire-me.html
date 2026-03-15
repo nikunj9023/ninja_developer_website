@@ -475,9 +475,19 @@
             // 2. Send via EmailJS
             emailjs.send('service_1q20cs9', 'template_ezrino7', templateParams)
                 .then(data => {
+                    // WhatsApp Redirection
+                    const phoneNumber = "919023489552";
+                    const whatsappMsg = encodeURIComponent(`Hello Nikunj, I'm interested in hiring you for a project!\n\nName: ${formData.name}\nBudget: ${formData.budget}\nProject Type: ${formData.project_type}\nDetails: ${formData.details}`);
+                    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${whatsappMsg}`;
+
                     btn.style.display = 'none';
                     msg.style.display = 'block';
-                    this.reset();
+                    msg.innerHTML = '<i class="fa-solid fa-check-circle"></i> Request sent! Redirecting to WhatsApp...';
+                    
+                    setTimeout(() => {
+                        window.open(whatsappUrl, '_blank');
+                        this.reset();
+                    }, 1500);
                 })
                 .catch(error => {
                     console.error('Email Error:', error);

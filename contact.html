@@ -128,10 +128,20 @@
                         console.log("EmailJS Success!", response.status, response.text);
                         status.style.display = 'block';
                         status.style.color = '#10b981';
-                        status.innerHTML = '<i class="fa-solid fa-check"></i> Message sent successfully!';
-                        btn.innerHTML = 'Send Message';
-                        btn.disabled = false;
-                        document.getElementById('contactForm').reset();
+                        status.innerHTML = '<i class="fa-solid fa-check"></i> Message sent successfully! Redirecting to WhatsApp...';
+                        
+                        // WhatsApp Redirection
+                        const phoneNumber = "919023489552";
+                        const whatsappMsg = encodeURIComponent(`Hello Nikunj, I just submitted a contact form on your website.\n\nName: ${templateParams.from_name}\nEmail: ${templateParams.reply_to}\nPhone: ${templateParams.contact_number}\nMessage: ${templateParams.message}`);
+                        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${whatsappMsg}`;
+                        
+                        setTimeout(() => {
+                            window.open(whatsappUrl, '_blank');
+                            btn.innerHTML = 'Send Message';
+                            btn.disabled = false;
+                            document.getElementById('contactForm').reset();
+                        }, 1500);
+
                     }, function (error) {
                         console.error('EmailJS Error:', error);
                         status.style.display = 'block';
