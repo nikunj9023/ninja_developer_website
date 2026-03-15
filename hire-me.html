@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hire Me | Ninja Developer</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .hire-me-container {
+            padding: 8rem 5% 5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hire-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .hire-header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hire-header p {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .portal-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .portal-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Estimator Styling */
+        .estimator-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .estimator-card h3 {
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-section label {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .option-label {
+            display: block;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option-label input {
+            display: none;
+        }
+
+        .option-label span {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+        }
+
+        .option-label:hover {
+            border-color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        input:checked+.option-label {
+            border-color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.2);
+            color: white;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+        }
+
+        input:checked+.option-label span {
+            color: var(--primary-color);
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(168, 85, 247, 0.2));
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .result-box h4 {
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .result-box .price-range {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+        }
+
+        /* Brief Form Styling */
+        .brief-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .brief-card h3 {
+            margin-bottom: 1.5rem;
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .input-group input,
+        .input-group textarea,
+        .input-group select {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: white;
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus,
+        .input-group select:focus {
+            border-color: var(--secondary-color);
+        }
+
+        .input-group select {
+            cursor: pointer;
+        }
+
+        .input-group select option {
+            background: var(--dark-bg);
+            color: white;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(168, 85, 247, 0.4);
+        }
+
+        .success-msg {
+            display: none;
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid #10b981;
+            color: #10b981;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 1rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2" style="background: var(--accent-color)"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <nav class="glass-nav">
+        <div class="logo">
+            <i class="fa-solid fa-user-ninja"></i> Ninja<span>Developer</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="features.html">Features</a></li>
+            <li><a href="deployment.html">Deployment</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="hire-me.html" class="active btn-primary glowing"
+                    style="color:white; padding: 0.5rem 1rem;">Hire Me</a></li>
+        </ul>
+        <div class="hamburger">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+    </nav>
+
+    <div class="hire-me-container">
+        <div class="hire-header fade-in-up">
+            <h1 class="gradient-text">Let's Build Something Great</h1>
+            <p>Ready to upgrade your business with custom software? Use the estimator below to gauge your project scope,
+                then send me a brief to get started.</p>
+        </div>
+
+        <div class="portal-grid">
+            <!-- Left Side: Interactive Estimator -->
+            <div class="estimator-card glass-card fade-in-up delay-1">
+                <h3><i class="fa-solid fa-calculator"></i> Project Estimator</h3>
+
+                <div class="form-section">
+                    <label>What do you need built?</label>
+                    <div class="options-grid">
+                        <div>
+                            <input type="radio" name="projectType" id="type_landing" value="500" checked>
+                            <label for="type_landing" class="option-label">
+                                <span><i class="fa-regular fa-window-maximize"></i></span>
+                                Landing Page
+                            </label>
+                        </div>
+                        <div>
+                            <input type="radio" name="projectType" id="type_ecommerce" value="2500">
+                            <label for="type_ecommerce" class="option-label">
+                                <span><i class="fa-solid fa-cart-shopping"></i></span>
+                                E-Commerce
+                            </label>
+                        </div>
+                        <div>
+                            <input type="radio" name="projectType" id="type_webapp" value="5000">
+                            <label for="type_webapp" class="option-label">
+                                <span><i class="fa-solid fa-cubes"></i></span>
+                                Custom Web App
+                            </label>
+                        </div>
+                        <div>
+                            <input type="radio" name="projectType" id="type_dashboard" value="3500">
+                            <label for="type_dashboard" class="option-label">
+                                <span><i class="fa-solid fa-chart-line"></i></span>
+                                Dashboard / CRM
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <label>Timeline & Urgency</label>
+                    <div class="options-grid">
+                        <div>
+                            <input type="radio" name="timeline" id="time_relaxed" value="1" checked>
+                            <label for="time_relaxed" class="option-label" style="padding: 0.5rem;">
+                                Flexible (1-2 months)
+                            </label>
+                        </div>
+                        <div>
+                            <input type="radio" name="timeline" id="time_rush" value="1.5">
+                            <label for="time_rush" class="option-label" style="padding: 0.5rem;">
+                                ASAP (Rush Order)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <label>Backend Required?</label>
+                    <div class="options-grid">
+                        <div>
+                            <input type="radio" name="backend" id="backend_no" value="0" checked>
+                            <label for="backend_no" class="option-label" style="padding: 0.5rem;">
+                                No (Frontend Only)
+                            </label>
+                        </div>
+                        <div>
+                            <input type="radio" name="backend" id="backend_yes" value="2000">
+                            <label for="backend_yes" class="option-label" style="padding: 0.5rem;">
+                                Yes (Database + API)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-box">
+                    <h4>Estimated Investment</h4>
+                    <div class="price-range" id="priceDisplay">$500 - $800</div>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 5px;">*This is a rough estimate.
+                        Final quote depends on specific requirements.</p>
+                </div>
+            </div>
+
+            <!-- Right Side: Project Brief Form -->
+            <div class="brief-card glass-card fade-in-up delay-2">
+                <h3><i class="fa-solid fa-paper-plane"></i> Submit Project Brief</h3>
+                <form id="hireForm">
+                    <div class="input-group">
+                        <input type="text" id="name" placeholder="Your Name or Company" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="email" id="email" placeholder="Email Address" required>
+                    </div>
+                    <div class="input-group">
+                        <select id="budget" required>
+                            <option value="" disabled selected>Select Your Budget Range</option>
+                            <option value="under_1k">Under $1,000</option>
+                            <option value="1k_to_5k">$1,000 - $5,000</option>
+                            <option value="5k_to_10k">$5,000 - $10,000</option>
+                            <option value="over_10k">$10,000+</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <textarea id="details" rows="6"
+                            placeholder="Tell me about your project goals, features needed, and any reference websites..."
+                            required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn" id="submitBtn">Send Proposal Request <i
+                            class="fa-solid fa-arrow-right"></i></button>
+                    <div class="success-msg" id="successMsg">
+                        <i class="fa-solid fa-check-circle"></i> Request sent successfully! I will contact you within 24
+                        hours.
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content" style="flex-wrap: wrap; gap: 2rem;">
+            <div class="footer-logo">
+                <i class="fa-solid fa-user-ninja"></i> Ninja<span>Developer</span>
+            </div>
+            <div class="social-links">
+                <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+                <a href="#"><i class="fa-brands fa-github"></i></a>
+                <a href="https://instagram.com/ninja_developer_90"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://wa.me/919023489552"><i class="fa-brands fa-whatsapp"></i></a>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 1rem; color: var(--text-muted); font-size: 0.9rem;">
+            &copy; 2026 Ninja Developer. All rights reserved.
+            <br>
+            <h2>Developed By PARMAR NIKUNJKUMAR J.</h2>
+            <h1>Mo. No. +91 90234 89552</h1>
+        </div>
+    </footer>
+
+    <script>
+        // Estimator Logic
+        const typeRadios = document.querySelectorAll('input[name="projectType"]');
+        const timeRadios = document.querySelectorAll('input[name="timeline"]');
+        const backendRadios = document.querySelectorAll('input[name="backend"]');
+        const priceDisplay = document.getElementById('priceDisplay');
+
+        function calculateEstimate() {
+            let base = 0;
+            let multiplier = 1;
+            let backendCost = 0;
+
+            typeRadios.forEach(r => { if (r.checked) base = parseFloat(r.value); });
+            timeRadios.forEach(r => { if (r.checked) multiplier = parseFloat(r.value); });
+            backendRadios.forEach(r => { if (r.checked) backendCost = parseFloat(r.value); });
+
+            let totalMin = (base + backendCost) * multiplier;
+            let totalMax = totalMin * 1.5; // Give a 50% range
+
+            // formatting
+            let fmtMin = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(totalMin);
+            let fmtMax = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(totalMax);
+
+            priceDisplay.textContent = `${fmtMin} - ${fmtMax}`;
+        }
+
+        // Add event listeners
+        typeRadios.forEach(r => r.addEventListener('change', calculateEstimate));
+        timeRadios.forEach(r => r.addEventListener('change', calculateEstimate));
+        backendRadios.forEach(r => r.addEventListener('change', calculateEstimate));
+
+        // Initial Calculation
+        calculateEstimate();
+
+        // Form Submit to Backend API
+        document.getElementById('hireForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const msg = document.getElementById('successMsg');
+
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+            btn.style.opacity = '0.7';
+
+            // Collect project type based on radio selection
+            let selectedType = "";
+            document.querySelectorAll('input[name="projectType"]').forEach(r => {
+                if (r.checked) {
+                    selectedType = r.nextElementSibling.innerText.trim();
+                }
+            });
+
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                budget: document.getElementById('budget').value,
+                details: document.getElementById('details').value,
+                project_type: selectedType
+            };
+
+            fetch('http://127.0.0.1:5000/api/website-lead', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    btn.style.display = 'none';
+                    msg.style.display = 'block';
+                    this.reset();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    btn.innerHTML = 'Error! Try Again';
+                    btn.style.opacity = '1';
+                    setTimeout(() => {
+                        btn.innerHTML = 'Send Proposal Request <i class="fa-solid fa-arrow-right"></i>';
+                    }, 3000);
+                });
+        });
+    </script>
+</body>
+
+</html>

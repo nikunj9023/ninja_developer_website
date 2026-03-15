@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Ninja Developer</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function () {
+            // https://dashboard.emailjs.com/admin/account
+            emailjs.init('co6_90E84kdZxW-JX'); // Replace with your Public Key
+        })();
+    </script>
+</head>
+
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <nav class="glass-nav">
+        <div class="logo">
+            <i class="fa-solid fa-user-ninja"></i> Ninja<span>Developer</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="features.html">Features</a></li>
+            <li><a href="projects.html">Projects</a></li>
+            <li><a href="deployment.html">Deployment</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html" class="active">Contact</a></li>
+            <li><a href="deployment.html" class="btn-primary">Get Started</a></li>
+        </ul>
+        <div class="hamburger">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1 class="fade-in-up">Get in <span class="gradient-text">Touch</span></h1>
+            <p class="fade-in-up delay-1">Have questions? Ready to start your free trial? We're here to help.</p>
+        </div>
+    </header>
+
+    <section id="contact" class="contact-section">
+        <div class="glass-card contact-form-card">
+            <h2>Send us a Message</h2>
+            <p>We'll get back to you within 24 hours.</p>
+            <form id="contactForm">
+                <div class="form-group">
+                    <input type="text" id="from_name" placeholder="Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="reply_to" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="tel" id="contact_number" placeholder="Contact Number">
+                </div>
+                <div class="form-group">
+                    <textarea id="message" placeholder="Message" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Send Message</button>
+            </form>
+            <div id="statusMessage" style="margin-top: 1rem; text-align: center; display: none;"></div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <i class="fa-solid fa-user-ninja"></i> Ninja<span>Developer</span>
+            </div>
+            <p>&copy; 2026 Ninja Developer. All rights reserved.</p>
+            <div class="social-links">
+                <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+                <a href="#"><i class="fa-brands fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // EmailJS and CRM Handling
+        document.getElementById('contactForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const btn = this.querySelector('button');
+            const status = document.getElementById('statusMessage');
+
+            btn.innerHTML = 'Sending... <i class="fa-solid fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+
+            const templateParams = {
+                from_name: document.getElementById('from_name').value,
+                reply_to: document.getElementById('reply_to').value,
+                contact_number: document.getElementById('contact_number').value,
+                message: document.getElementById('message').value
+            };
+
+            // 1. Send to CRM Backend
+            const CRM_API_URL = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost' 
+                                ? 'http://127.0.0.1:5000' 
+                                : 'https://ninja-developer-api.onrender.com'; // YOUR PRODUCTION URL
+
+            fetch(`${CRM_API_URL}/api/website-lead`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            }).catch(e => console.error("Failed to save to CRM", e));
+
+            // 2. Send via EmailJS (Replace these with your actual keys)
+            emailjs.send('service_1q20cs9', 'template_ezrino7', templateParams)
+                .then(function () {
+                    status.style.display = 'block';
+                    status.style.color = '#10b981';
+                    status.innerHTML = '<i class="fa-solid fa-check"></i> Message sent & saved successfully!';
+                    btn.innerHTML = 'Send Message';
+                    btn.disabled = false;
+                    document.getElementById('contactForm').reset();
+                }, function (error) {
+                    console.error('EmailJS Error:', error);
+                    status.style.display = 'block';
+                    status.style.color = '#ef4444';
+                    status.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> CRM updated, but email failed. Check console.';
+                    btn.innerHTML = 'Send Message';
+                    btn.disabled = false;
+                    document.getElementById('contactForm').reset();
+                });
+        });
+    </script>
+</body>
+
+</html>
